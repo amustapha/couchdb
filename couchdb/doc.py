@@ -63,6 +63,14 @@ class CouchDB:
     def get_databases(self):
         return Connection.get('_all_dbs')
 
+    def create(self, database: str, **params):
+        db = self.use(database)
+        state = Connection.put('', params=params)
+        if state.get('ok'):
+            return db
+        else:
+            raise ValueError(state)
+
     def use(self, database: str):
         if len(Connection.url) > 1:
             Connection.url[1] = database
