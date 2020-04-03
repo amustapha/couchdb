@@ -9,6 +9,11 @@ Currently, this module can perform
 - save
 
 
+## Install
+```shell script
+pip install git+git://github.com/aamustapha/couchdb.git
+```
+
 ## How to
 ```python
 from couchdb import CouchDB
