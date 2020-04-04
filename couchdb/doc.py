@@ -64,6 +64,30 @@ class Database(object):
     def __init__(self, name):
         self.name = name
 
+    @property
+    def security(self):
+        return Connection.get('_security')
+
+    def _update_security(self, level, role=None, user=None):
+        security = self.security
+        if role:
+            print('here role')
+            if not security[level].get('roles'):
+                security[level]['roles'] = []
+                print('here security')
+            security[level]['roles'].append(role)
+        if user:
+            if not security[level].get('members'):
+                security[level]['members'] = []
+            security[level]['members'].append(user)
+        return Connection.put('_security', json=security)
+
+    def add_member(self, role=None, user=None):
+        return self._update_security('members', role, user)
+
+    def add_admin(self, role=None, user=None):
+        return self._update_security('admins', role, user)
+
     def find(self, query):
         response = Connection.post('_find', json={"selector": query})
         for doc in response['docs']:
