@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="couchdb", # Replace with your own username
-    version="0.0.4",
+    version="0.0.5",
     author="Abdulhakeem Mustapha",
     author_email="abdulhakeemmustapha@gmail.com",
     description="A package for handing basic CouchDB Operations",
