@@ -32,7 +32,25 @@ class Connection:
 class Document(Base):
 
     def save(self):
-        Connection.put(self._id, json=self.attributes)
+        if self._id:
+            instance = self._update()
+        else:
+            instance = self._create()
+        return instance
+
+    def refresh(self):
+        latest = Connection.get(self._id)
+        self.set(**latest)
+
+    def _update(self):
+        req = Connection.put(self._id, json=self.attributes)
+        self.set(_id=req.get('id'), _rev=req.get('rev'))
+        return req
+
+    def _create(self):
+        req = Connection.post('', json=self.attributes)
+        self.set(_id=req.get('id'), _rev=req.get('rev'))
+        return req
 
 
 class Database(object):
@@ -48,10 +66,14 @@ class Database(object):
     def get(self, id):
         doc = Connection.get(id)
         if doc.get('error'):
-            if doc.get('reason') == 'missing':
-                raise NotFound('error')
+            raise LookupError(doc)
         else:
             return Document(**doc)
+
+    def create(self, **kwargs):
+        doc = Document(**kwargs)
+        doc.save()
+        return doc
 
 
 class CouchDB:
