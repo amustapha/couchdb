@@ -71,10 +71,8 @@ class Database(object):
     def _update_security(self, level, role=None, user=None):
         security = self.security
         if role:
-            print('here role')
             if not security[level].get('roles'):
                 security[level]['roles'] = []
-                print('here security')
             security[level]['roles'].append(role)
         if user:
             if not security[level].get('members'):
@@ -101,8 +99,7 @@ class Database(object):
             return Document(**doc)
 
     def create(self, **kwargs):
-        doc = Document(**kwargs)
-        doc.save()
+        doc = Document(**kwargs).save()
         return doc
 
 
