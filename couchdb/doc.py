@@ -44,12 +44,18 @@ class Document(Base):
 
     def _update(self):
         req = Connection.put(self._id, json=self.attributes)
-        self.set(_id=req.get('id'), _rev=req.get('rev'))
+        if req.get('ok'):
+            self.set(_rev=req.get('rev'))
+        else:
+            raise ConnectionError(req)
         return req
 
     def _create(self):
         req = Connection.post('', json=self.attributes)
-        self.set(_id=req.get('id'), _rev=req.get('rev'))
+        if req.get('ok'):
+            self.set(_id=req.get('id'), _rev=req.get('rev'))
+        else:
+            raise ConnectionError(req)
         return req
 
 
