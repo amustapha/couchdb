@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from .base import Base
@@ -58,11 +60,17 @@ class Document(Base):
             raise ConnectionError(req)
         return req
 
+    def __repr__(self):
+        return json.dumps(self.attributes)
+
 
 class Database(object):
 
     def __init__(self, name):
         self.name = name
+
+    def __repr__(self):
+        return self.name
 
     @property
     def security(self):
